@@ -52,6 +52,7 @@ pico_enable_stdio_usb(access-point-internal-temperature 1)
 target_link_libraries(access-point-internal-temperature
         pico_stdlib
         hardware_adc
+        hardware_gpio
         pico_stdio_usb
         pico_cyw43_arch_lwip_threadsafe_background)
 
