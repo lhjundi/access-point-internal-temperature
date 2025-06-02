@@ -35,7 +35,11 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(access-point-internal-temperature access-point-internal-temperature.c )
+add_executable(
+    access-point-internal-temperature 
+    access-point-internal-temperature.c
+    dhcpserver/dhcpserver.c
+    dnsserver/dnsserver.c)
 
 pico_set_program_name(access-point-internal-temperature "access-point-internal-temperature")
 pico_set_program_version(access-point-internal-temperature "0.1")
@@ -46,12 +50,22 @@ pico_enable_stdio_usb(access-point-internal-temperature 1)
 
 # Add the standard library to the build
 target_link_libraries(access-point-internal-temperature
-        pico_stdlib)
+        pico_stdlib
+        hardware_adc
+        pico_stdio_usb
+        pico_cyw43_arch_lwip_threadsafe_background)
 
 # Add the standard include files to the build
 target_include_directories(access-point-internal-temperature PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
+        ${CMAKE_CURRENT_LIST_DIR}/.. #for our common lwipopts
+        ${CMAKE_CURRENT_LIST_DIR}/dhcpserver
+        ${CMAKE_CURRENT_LIST_DIR}/dnsserver
 )
+
+pico_configure_ip4_address(
+    access-point-internal-temperature PRIVATE
+    CYW43_DEFAULT_IP4_ADDRESS 192.168.4.1)
 
 # Add any user requested libraries
 target_link_libraries(access-point-internal-temperature 
