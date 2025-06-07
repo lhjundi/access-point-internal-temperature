@@ -120,7 +120,7 @@ static int test_server_content(const char *request, const char *params, char *re
         bool value;
         cyw43_gpio_get(&cyw43_state, LED_GPIO, &value);
         int led_state = value;
-
+        
         // See if the user changed it
         if (params)
         {
@@ -135,6 +135,8 @@ static int test_server_content(const char *request, const char *params, char *re
                 {
                     gpio_put(RED_LED_PIN, 0);
                 }
+                printf("     Internal temperature: %.2f ̣̣Celsius\n     Red Led State: %s\n", current_temperature, led_state? "ON" : "OFF");
+
             }
         }
 
@@ -371,6 +373,7 @@ float convert_to_temperature(uint16_t adc_value)
 
     // Apply the temperature conversion formula (RP2040 internal sensor)
     float temperature = 27.0f - (adc_voltage - 0.706f) / 0.001721f;
+
 
     return temperature;
 }
